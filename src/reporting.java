@@ -107,12 +107,12 @@ class Access {
         Scanner input = new Scanner(System.in);
         System.out.println("Enter Patient SSN: ");
         String ssn =  input.nextLine();
-        ResultSet rs = db.getPatientInfo(ssn);
-        System.out.print("Patient SSN: " + rs.getString("ssn") + "\n"
-                        + "Patient First Name: " + rs.getString("fName") + "\n"
-                        + "Patient Last Name: " + rs.getString("lName") + "\n"
-                        + "Patient Address: " + rs.getString("address") + "\n");
-        rs.close();
+        ResultSet ptInfo = db.getPatientInfo(ssn);
+        System.out.print("Patient SSN: " + ptInfo.getString("ssn") + "\n"
+                        + "Patient First Name: " + ptInfo.getString("fName") + "\n"
+                        + "Patient Last Name: " + ptInfo.getString("lName") + "\n"
+                        + "Patient Address: " + ptInfo.getString("address") + "\n");
+        ptInfo.close();
         db.wrapUp();
     }
 
@@ -120,14 +120,14 @@ class Access {
         Scanner input = new Scanner(System.in);
         System.out.println("Enter Doctor ID: ");
         String id =  input.nextLine();
-        ResultSet rs = db.getDoctorInfo(id);
-        System.out.print("Doctor ID: " + rs.getString("id") + "\n"
-                + "Doctor First Name: " + rs.getString("fName") + "\n"
-                + "Doctor Last Name: " + rs.getString("lName") + "\n"
-                + "Doctor Gender: " + rs.getString("gender") + "\n"
-                + "Graduated From: " + rs.getString("graduatedFrom") + "\n"
-                + "Specialty: " + rs.getString("specialty") + "\n");
-        rs.close();
+        ResultSet drInfo = db.getDoctorInfo(id);
+        System.out.print("Doctor ID: " + drInfo.getString("id") + "\n"
+                + "Doctor First Name: " + drInfo.getString("fName") + "\n"
+                + "Doctor Last Name: " + drInfo.getString("lName") + "\n"
+                + "Doctor Gender: " + drInfo.getString("gender") + "\n"
+                + "Graduated From: " + drInfo.getString("graduatedFrom") + "\n"
+                + "Specialty: " + drInfo.getString("specialty") + "\n");
+        drInfo.close();
         db.wrapUp();
 
     }
@@ -136,24 +136,30 @@ class Access {
         Scanner input = new Scanner(System.in);
         System.out.println("Enter Admission Number: ");
         String num =  input.nextLine();
-        ResultSet rs = db.getAdmissionInfo(num);
-        System.out.print("Admission ID: " + rs.getString("AdmID") + "\n"
-                + "Patient SSN: " + rs.getString("SSN") + "\n"
-                + "Admission Date: " + rs.getString("admissionDate") + "\n"
-                + "Total Payment: " + rs.getString("payment") + "\n");
+        ResultSet admInfo = db.getAdmissionInfo(num);
+        System.out.print("Admission ID: " + admInfo.getString("AdmID") + "\n"
+                + "Patient SSN: " + admInfo.getString("SSN") + "\n"
+                + "Admission Date: " + admInfo.getString("admissionDate") + "\n"
+                + "Total Payment: " + admInfo.getString("payment") + "\n");
+        admInfo.close();
+
+        ResultSet roomInfo = db.getRoomInfo(num);
+
         System.out.println("Rooms: ");
-        int x = 0;
-        while (x < 3) {
-            System.out.println ("room" + "\t" + "from date" + "\t" + "to date" + "\n");
-            x+=1;
+        while (roomInfo.next()) {
+            System.out.println (roomInfo.getString("RoomNum") + "\t"
+                                + roomInfo.getString("FromDate") + "\t"
+                                + roomInfo.getString("ToDate") + "\n");
         }
+        roomInfo.close();
+
+        ResultSet examInfo = db.getExamInfo(num);
         System.out.println("Doctors who examined the patient in this admission: ");
-        x = 0;
-        while (x < 3) {
-            System.out.println("Doctor ID: " + "id");
-            x+=1;
+        while (examInfo.next()) {
+            System.out.println("Doctor ID: " + examInfo.getString("DoctorID"));
         }
-        rs.close();
+        examInfo.close();
+
         db.wrapUp();
 
     }
