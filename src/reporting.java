@@ -206,5 +206,15 @@ class DatabaseConnection {
         return null;
     }
 
+    public void WrapUp() throws SQLException {
+        patientInfo.close();
+        doctorInfo.close();
+        roomInfo.close();
+        admissionInfo.close();
+        examInfo.close();
+        paymentUpdate.close();
+        connection.close();
+    }
+
 }
 
