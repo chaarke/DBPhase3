@@ -124,14 +124,11 @@ class Reporting {
             Scanner input = new Scanner(System.in);
             System.out.println("Enter Patient SSN: ");
             String ssn = input.nextLine();
-            System.out.println("A: "+ssn+" :A");
             Statement patientInfo = connection.createStatement();
             if (patientInfo != null) {
-                ResultSet ptResult = patientInfo.executeQuery("SELECT SSN, fName, lName, address FROM Patient WHERE SSN = "+ssn);
+                ResultSet ptResult = patientInfo.executeQuery("SELECT SSN, fName, lName, address FROM Patient WHERE SSN = '"+ssn+"'");
                 if (ptResult != null) {
-                    System.out.println("Reading Patient Info\n"+patientInfo+"\n");
-                    if(ptResult.getFetchSize() == 0)
-                        System.out.println("No patients found that match");
+                    System.out.println("Reading Patient Info\n");
                     while (ptResult.next()) {
                         System.out.print("Patient SSN: " + ptResult.getString("SSN") + "\n"
                                 + "Patient First Name: " + ptResult.getString("fName") + "\n"
@@ -159,13 +156,15 @@ class Reporting {
             String id = input.nextLine();
             Statement doctorInfo = connection.createStatement();
             if (doctorInfo != null) {
-                ResultSet docResult = doctorInfo.executeQuery("SELECT ID, fName, lName, gender, graduatedFrom, specialty FROM Employee, Doctor WHERE Employee.ID = Doctor.docID AND Doctor.docID = "+id);
-                if (docResult != null) {
-                    System.out.print("Patient SSN: " + docResult.getString("ssn") + "\n"
-                            + "Patient First Name: " + docResult.getString("fName") + "\n"
-                            + "Patient Last Name: " + docResult.getString("lName") + "\n"
-                            + "Patient Address: " + docResult.getString("address") + "\n");
-                    docResult.close();
+                ResultSet docSet = doctorInfo.executeQuery("SELECT ID, fName, lName, gender, graduatedFrom, specialty FROM Employee, Doctor WHERE Employee.ID = Doctor.docID AND Doctor.docID = "+id);
+                if (docSet != null) {
+                    System.out.print("Doctor ID: " + docSet.getString("id") + "\n"
+                            + "Doctor First Name: " + docSet.getString("fName") + "\n"
+                            + "Doctor Last Name: " + docSet.getString("lName") + "\n"
+                            + "Doctor Gender: " + docSet.getString("gender") + "\n"
+                            + "Graduated From: " + docSet.getString("graduatedFrom") + "\n"
+                            + "Specialty: " + docSet.getString("specialty") + "\n");
+                    docSet.close();
                 }
                 doctorInfo.close();
             } else {
@@ -194,6 +193,7 @@ class Reporting {
                                 + "Admission Date: " + admSet.getString("admissionDate") + "\n"
                                 + "Total Payment: " + admSet.getString("payment") + "\n");
                     }
+                    admSet.close();
                 }
                 System.out.println("Rooms: ");
                 ResultSet roomSet = statement.executeQuery("SELECT RoomNum, StartDate as FromDate, EndDate as ToDate FROM RoomStay WHERE Admid = "+num);
@@ -203,6 +203,7 @@ class Reporting {
                                 + roomSet.getString("FromDate") + "\t"
                                 + roomSet.getString("ToDate") + "\n");
                     }
+                    roomSet.close();
                 }
                 System.out.println("Doctors who examined the patient in this admission: ");
                 ResultSet examSet = statement.executeQuery("SELECT DoctorID FROM Examinations WHERE Admid = "+num);
@@ -210,6 +211,7 @@ class Reporting {
                     while (examSet.next()){
                         System.out.println("Doctor ID: " + examSet.getString("DoctorID"));
                     }
+                    examSet.close();
                 }
                 statement.close();
             } else {
