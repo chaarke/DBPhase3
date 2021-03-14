@@ -1,4 +1,5 @@
 import java.util.*;
+import java.sql.*;
 import java.io.*;
 
 class Reporting {
@@ -54,10 +55,13 @@ class Reporting {
 
         switch (Integer.parseInt(args[2])) {
             case 1:
-                access.patientMode();
+                try {
+                    access.patientMode();
+                } catch (SQLException e) {
+                    System.out.println("Failed to retrieve patient information.");
+                }
                 break;
             case 2:
-                access.doctorMode();
                 break;
             case 3:
                 access.admissionMode();
@@ -74,14 +78,24 @@ class Reporting {
 
 class Access {
 
+    DatabaseConnection db = new DatabaseConnection();
+
     public void login(String username, String password) throws Exception {
 
     }
 
-    public void patientMode() {
+    public void patientMode() throws SQLException {
         Scanner input = new Scanner(System.in);
         System.out.println("Enter Patient SSN: ");
         String ssn =  input.nextLine();
+
+        String output = new String("Patient SSN: " + rs.getString("ssn")
+                                    + "Patient First Name: " + rs.getString("fname")
+                                    + "Patient Last Name: " + rs.getString("lname")
+                                    + "Patient Address: " + rs.getString("address"));
+        rs.close();
+        System.out.println(output);
+
 
     }
 
@@ -110,6 +124,6 @@ class Access {
 }
 
 class DatabaseConnection {
-    
+
 }
 
