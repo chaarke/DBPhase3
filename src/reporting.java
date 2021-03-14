@@ -29,7 +29,9 @@ class Reporting {
         Access access = new Access();
 
         // Process the user login
-
+        int argC = args.length;
+        if (argC < 2)
+            return;
         String username = args[0];
         String password = args[1];
 
@@ -37,7 +39,7 @@ class Reporting {
 
         // Process the mode selection
 
-        if (args[2] == null) {
+        if (argC == 2) {
             System.out.print(
                     "1. Report Patient Basic Info\n"
                             + "2. Report Doctor Basic Info\n"
