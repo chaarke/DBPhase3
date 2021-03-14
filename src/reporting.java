@@ -1,4 +1,5 @@
 import java.util.*;
+import java.sql.*;
 import java.io.*;
 
 class Reporting {
@@ -110,6 +111,51 @@ class Access {
 }
 
 class DatabaseConnection {
-    
+    Connection connection;
+    PreparedStatement patientInfo, doctorInfo, admissionInfo, roomInfo, examInfo, paymentUpdate;
+
+    public boolean connect(String userid, String password) {
+        boolean success = false;
+        try (Connection conn = DriverManager.getConnection  ("jdbc:oracle:thin:@csorcl.cs.wpi.edu:1521:orcl",userid, password)) {
+
+            if (conn != null) {
+                success = true;
+                connection = conn;
+                System.out.println("Connected to the database!");
+                patientInfo = connection.prepareStatement("SELECT SSN, fName, lName, address FROM Patient WHERE SSN = ?;");
+                doctorInfo = connection.prepareStatement("SELECT ID, fName, lName, gender, graduatedFrom, specialty FROM Employee, Doctor WHERE Employee.ID = Doctor.docID AND Doctor.docID = ?;");
+                admissionInfo = connection.prepareStatement("SELECT Admid, SSN, StartDate as AdmissionDate, Payment FROM Admission WHERE Admid = ?;");
+                roomInfo = connection.prepareStatement("SELECT RoomNum, StartDate as FromDate, EndDate as ToDate FROM RoomStay WHERE Admid = ?;");
+                examInfo = connection.prepareStatement("SELECT DoctorID FROM Examinations WHERE Admid = ?;");
+                paymentUpdate = connection.prepareStatement("UPDATE Admission SET Payment = ? WHERE Admid = ?;");
+            } else {
+                success = false;
+                System.out.println("Failed to make connection!");
+            }
+
+        } catch (SQLException e) {
+            System.err.format("SQL State: %s\n%s", e.getSQLState(), e.getMessage());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return success;
+    }
+
+    public ResultSet getPatientInfo(String ssn) throws SQLException {
+        try {
+            if (patientInfo != null) {
+                patientInfo.setString(1, ssn);
+                return patientInfo.executeQuery();
+            } else {
+                throw new Exception("No valid Connections open");
+            }
+        } catch (SQLException e) {
+            System.err.format("SQL State: %s\n%s", e.getSQLState(), e.getMessage());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
 }
 
