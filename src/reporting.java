@@ -157,5 +157,54 @@ class DatabaseConnection {
         return null;
     }
 
+    public ResultSet getDoctorInfo(String docID) throws SQLException {
+        try {
+            if (doctorInfo != null) {
+                doctorInfo.setString(1, docID;
+                return doctorInfo.executeQuery();
+            } else {
+                throw new Exception("No valid Connections open");
+            }
+        } catch (SQLException e) {
+            System.err.format("SQL State: %s\n%s", e.getSQLState(), e.getMessage());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public ResultSet getAdmissionInfo(String AdmID) throws SQLException {
+        try {
+            if (admissionInfo != null) {
+                admissionInfo.setString(1, AdmID);
+                return admissionInfo.executeQuery();
+            } else {
+                throw new Exception("No valid Connections open");
+            }
+        } catch (SQLException e) {
+            System.err.format("SQL State: %s\n%s", e.getSQLState(), e.getMessage());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public ResultSet updatePayment(String AdmID, float newPayment) throws SQLException {
+        try {
+            if (paymentUpdate != null) {
+                paymentUpdate.setString(1, AdmID);
+                paymentUpdate.setFloat(2,newPayment);
+                return paymentUpdate.executeQuery();
+            } else {
+                throw new Exception("No valid Connections open");
+            }
+        } catch (SQLException e) {
+            System.err.format("SQL State: %s\n%s", e.getSQLState(), e.getMessage());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
 }
 
