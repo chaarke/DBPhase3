@@ -50,6 +50,7 @@ class Reporting {
             if (argC == 2) {
                 System.out.print(
                         "1. Report Patient Basic Info\n"
+                                + "2. Report Doctor Info\n"
                                 + "3. Report Admission Info\n"
                                 + "4. Update Admission Payment\n");
                 return;
@@ -158,12 +159,14 @@ class Reporting {
             if (doctorInfo != null) {
                 ResultSet docSet = doctorInfo.executeQuery("SELECT ID, fName, lName, gender, graduatedFrom, specialty FROM Employee, Doctor WHERE Employee.ID = Doctor.docID AND Doctor.docID = "+id);
                 if (docSet != null) {
-                    System.out.print("Doctor ID: " + docSet.getString("id") + "\n"
-                            + "Doctor First Name: " + docSet.getString("fName") + "\n"
-                            + "Doctor Last Name: " + docSet.getString("lName") + "\n"
-                            + "Doctor Gender: " + docSet.getString("gender") + "\n"
-                            + "Graduated From: " + docSet.getString("graduatedFrom") + "\n"
-                            + "Specialty: " + docSet.getString("specialty") + "\n");
+                    while(docSet.next()) {
+                        System.out.print("Doctor ID: " + docSet.getString("id") + "\n"
+                                + "Doctor First Name: " + docSet.getString("fName") + "\n"
+                                + "Doctor Last Name: " + docSet.getString("lName") + "\n"
+                                + "Doctor Gender: " + docSet.getString("gender") + "\n"
+                                + "Graduated From: " + docSet.getString("graduatedFrom") + "\n"
+                                + "Specialty: " + docSet.getString("specialty") + "\n");
+                    }
                     docSet.close();
                 }
                 doctorInfo.close();
@@ -185,12 +188,12 @@ class Reporting {
             String num =  input.nextLine();
             Statement statement = connection.createStatement();
             if (statement != null) {
-                ResultSet admSet = statement.executeQuery("SELECT Admid, SSN, StartDate as AdmissionDate, Payment FROM Admission WHERE Admid = "+num);
+                ResultSet admSet = statement.executeQuery("SELECT Admid, SSN, AdmDate, Payment FROM Admission WHERE Admid = "+num);
                 if (admSet != null) {
                     while (admSet.next()){
                         System.out.print("Admission ID: " + admSet.getString("AdmID") + "\n"
                                 + "Patient SSN: " + admSet.getString("SSN") + "\n"
-                                + "Admission Date: " + admSet.getString("admissionDate") + "\n"
+                                + "Admission Date: " + admSet.getDate("admDate") + "\n"
                                 + "Total Payment: " + admSet.getString("payment") + "\n");
                     }
                     admSet.close();
@@ -200,8 +203,8 @@ class Reporting {
                 if (roomSet != null) {
                     while (roomSet.next()){
                         System.out.println (roomSet.getString("RoomNum") + "\t"
-                                + roomSet.getString("FromDate") + "\t"
-                                + roomSet.getString("ToDate") + "\n");
+                                + roomSet.getDate("FromDate") + "\t"
+                                + roomSet.getDate("ToDate") + "\n");
                     }
                     roomSet.close();
                 }
