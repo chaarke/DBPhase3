@@ -39,10 +39,10 @@ class Reporting {
             if (login(username, password)) {
                 System.out.println("Welcome, " + username);
                 System.out.println("Connected to the database!");
-
             } else {
                 System.out.println("Failed to make connection!");
                 System.out.println("Error signing on. Username or password is incorrect.");
+                return;
             }
 
             // Process the mode selection
@@ -116,7 +116,9 @@ class Reporting {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return !connection.isClosed();
+        if(connection != null)
+            return !connection.isClosed();
+        return false;
     }
 
 
