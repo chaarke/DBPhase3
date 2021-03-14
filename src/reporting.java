@@ -175,8 +175,8 @@ class DatabaseConnection {
 
     public boolean connect(String userid, String password) {
         boolean success = false;
-        try (Connection conn = DriverManager.getConnection  ("jdbc:oracle:thin:@csorcl.cs.wpi.edu:1521:orcl",userid, password)) {
-
+        try (Connection conn = DriverManager.getConnection  ("jdbc:oracle:thin:@oracle.wpi.edu:1521:orcl",userid, password)) {
+            Class.forName("oracle.jdbc.driver.OracleDriver");
             if (conn != null) {
                 success = true;
                 connection = conn;
@@ -216,10 +216,10 @@ class DatabaseConnection {
         return null;
     }
 
-    public ResultSet getRoomInfo(String docID) throws SQLException {
+    public ResultSet getRoomInfo(String AdmID) throws SQLException {
         try {
             if (roomInfo != null) {
-                roomInfo.setString(1, docID);
+                roomInfo.setString(1, AdmID);
                 return roomInfo.executeQuery();
             } else {
                 throw new Exception("No valid Connections open");
@@ -232,10 +232,10 @@ class DatabaseConnection {
         return null;
     }
 
-    public ResultSet getExamInfo(String docID) throws SQLException {
+    public ResultSet getExamInfo(String AdmID) throws SQLException {
         try {
             if (examInfo != null) {
-                examInfo.setString(1, docID);
+                examInfo.setString(1, AdmID);
                 return examInfo.executeQuery();
             } else {
                 throw new Exception("No valid Connections open");
