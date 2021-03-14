@@ -216,6 +216,38 @@ class DatabaseConnection {
         return null;
     }
 
+    public ResultSet getRoomInfo(String docID) throws SQLException {
+        try {
+            if (roomInfo != null) {
+                roomInfo.setString(1, docID);
+                return roomInfo.executeQuery();
+            } else {
+                throw new Exception("No valid Connections open");
+            }
+        } catch (SQLException e) {
+            System.err.format("SQL State: %s\n%s", e.getSQLState(), e.getMessage());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public ResultSet getExamInfo(String docID) throws SQLException {
+        try {
+            if (examInfo != null) {
+                examInfo.setString(1, docID);
+                return examInfo.executeQuery();
+            } else {
+                throw new Exception("No valid Connections open");
+            }
+        } catch (SQLException e) {
+            System.err.format("SQL State: %s\n%s", e.getSQLState(), e.getMessage());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     public ResultSet getDoctorInfo(String docID) throws SQLException {
         try {
             if (doctorInfo != null) {
@@ -231,6 +263,7 @@ class DatabaseConnection {
         }
         return null;
     }
+
 
     public ResultSet getAdmissionInfo(String AdmID) throws SQLException {
         try {
